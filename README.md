@@ -7,6 +7,7 @@
 -----
 
 - [Маршрутизация](#Маршрутизация)
+- [useContext](#useContext)
 
 # Маршрутизация
 
@@ -92,3 +93,152 @@ Switch итерируется по всем путям и в том случае
     }
 
     export default App;
+
+# useContext
+
+Нам нужно, чтобы при каких-либо изменениях в Home (форма редактирования), результат также отражался и в Preview. Для этого создадим хранилище, а доступ к нему реализуем через хук useContext.
+
+1. **Создаем экшены**:
+
+Перечисляем действия, которые будут воздействовать на стейт (возможно, изменятся). Пока это добавление/удаление данных для очередного ребенка:
+
+*src/context/user/userActions.js*
+
+    export const ADD_CHILD = 'ADD_CHILD';
+    export const REMOVE_CHILD = 'REMOVE_CHILD';
+
+2. **Создаем редьюсер**:
+
+Отправляя действия в редьюсер, мы можем воздействовать на стейт определенным образом. Существует несколько паттернов создания редьюсера. В данном случае воспользуемся литералами объекта:
+
+*src/context/user/userReducer.js*
+
+    import {ADD_CHILD, REMOVE_CHILD} from "./userActions";
+
+    const handlers = {
+      [ADD_CHILD]: (state, {payload}) => ({
+        ...state, children: [...state, payload]
+      }),
+      [REMOVE_CHILD]: (state, {payload}) => ({
+        ...state, children: state.children.filter(child => child.id !== payload)
+      }),
+      DEFAULT: state => state,
+    };
+
+    export const userReducer = (state, action) => {
+      const handle = handlers[action.type] || handlers.DEFAULT;
+      return handle(state, action);
+    };
+
+3. **Извлекаем контекст**:
+
+Именно этот инструмент предоставляет различным компонентам доступ к стейту user:
+
+*src/context/user/userContext.js*
+
+    import {createContext} from "react";
+
+    export const UserContext = createContext();
+
+4. **Соединяем стейт и редьюсер**:
+
+Создаем компонент, который содержит 
+- стейт 
+- метод dispatch, который воздействует на стейт
+- набор функции, которые оборачивают dispatch и производят необходимые действия
+
+Данный компонент будет оборачивать все приложение. А в пропсы провайдера передаем и сам стейт и функции взаимодействия {add, remove, user: state}:
+
+*src/context/user/UserState.js*
+
+    import React, {useReducer} from 'react';
+    import {ADD_CHILD, REMOVE_CHILD} from './userActions';
+    import {UserContext} from "./userContext";
+    import {userFields} from "./userFields";
+    import {userReducer} from './userReducer';
+
+    const initialState = {
+      userFields,
+      children: [],
+    };
+
+    export const UserState = ({children}) => {
+      const [state, dispatch] = useReducer(userReducer, initialState);
+
+      const add = (payload) => {
+        dispatch({
+          type: ADD_CHILD,
+          payload,
+        });
+      };
+
+      const remove = (id) => {
+        dispatch({
+          type: REMOVE_CHILD,
+          payload: id,
+        });
+      };
+
+      return (
+        <UserContext.Provider value={{add, remove, user: state}} >
+          {children}
+        </UserContext.Provider>
+      );
+    };
+
+5. **Оборачиваем все компоненты в UserState**. 
+
+Тем самым абсолютно любые компоненты имеют доступ к стейту Alert при использовании его контекста {add, remove, user: state}.
+
+*src/App.js*
+
+    import React from 'react';
+    import {BrowserRouter, Switch, Route, Redirect} from "react-router-dom";
+    import {Bottom, Navbar} from './components';
+    import {UserState} from './context/user/UserState';
+    import {HOME_ROUTE} from './routes/constants';
+    import {publicRoutes} from './routes/routes';
+
+    function App() {
+      return (
+        <UserState>
+          <BrowserRouter>
+              <Navbar />
+              <div className="container">
+                <Switch>
+                  {publicRoutes.map(({title, path, Component}) => <Route key={title} path={path} component={Component} exact />)}
+                  <Redirect to={HOME_ROUTE} />
+                </Switch>
+              </div>
+              <Bottom />
+          </BrowserRouter>
+        </UserState>
+      );
+    }
+
+    export default App;
+
+6. **Использование контекста в компонентах**.
+
+Все, что нужно теперь для извлечения стейта, это использовать по типу
+
+    const {add, remove, user: state} = useContext(UserContext)
+
+*src/pages/Home.jsx*
+
+    import React, {useContext} from 'react';
+    import {UserContext} from '../../context/user/userContext';
+
+    const Home = () => {
+      const user = useContext(UserContext);
+
+      console.log(`user in Home: `, user);
+
+      return (
+        <div>
+          Домашняя страница
+        </div>
+      );
+    };
+
+    export default Home;
