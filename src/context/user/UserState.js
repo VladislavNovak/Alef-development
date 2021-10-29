@@ -2,12 +2,32 @@
 import React, {useReducer} from 'react';
 import {ADD_CHILD, REMOVE_CHILD} from './userActions';
 import {UserContext} from "./userContext";
-import {userFields} from "./userFields";
+// import {userFields} from "./userFields";
 import {userReducer} from './userReducer';
 
 const initialState = {
-  userFields,
-  children: [],
+  userFieldsX: {
+    id: 0,
+    title: `Иван`,
+    age: 25,
+  },
+  children: [
+    {
+      id: 0,
+      title: `Мария`,
+      age: 5,
+    },
+    {
+      id: 1,
+      title: `Тимофей`,
+      age: 7,
+    },
+    {
+      id: 2,
+      title: `Владимир`,
+      age: 2,
+    },
+],
 };
 
 export const UserState = ({children}) => {

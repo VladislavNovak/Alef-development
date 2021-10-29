@@ -2,9 +2,9 @@ import React from 'react';
 
 const Bottom = () => {
   return (
-    <div>
-      Компонент с футером
-    </div>
+    <footer>
+      all rights reserved
+    </footer>
   );
 };
 
