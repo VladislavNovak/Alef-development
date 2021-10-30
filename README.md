@@ -97,31 +97,41 @@ Switch итерируется по всем путям и в том случае
 
 # useContext
 
-Нам нужно, чтобы при каких-либо изменениях в Home (форма редактирования), результат также отражался и в Preview. Для этого создадим хранилище, а доступ к нему реализуем через хук useContext.
+Задача следующая: изменения в форме (на странице Home) временные и сбрасываются при, например, марщрутизации. Но их можно сохранить в store посредством клика на кнопке "Сохранить". В этом случае результат будет также отражаться и на странице Preview
 
-1. **Создаем экшены**:
+Если следовать этой логике, создадим два хранилища: 
+- постоянное (userState) 
+- временное, которое будет находиться в странице Home и которое будет хранить актуальные записи
 
-Перечисляем действия, которые будут воздействовать на стейт (возможно, изменятся). Пока это добавление/удаление данных для очередного ребенка:
+Итак, создадим store, а доступ к нему реализуем через хук useContext. Для этого определимся со структурой хранилища. Пусть оно будет иметь поле user, которое содержит массив объектов. Содержание объектов исходит из перечисления необходимых данных типа [`title`, `age`, и т.д.]. Если ориентироваться на такой концепт, то со временем, в случае необходимости, количество и наименования полей можно будет легко скорректировать.
+
+    const initialState = {user: [{id, `title`: value, `age`: value}, и т.д.]};
+
+1. **Создаем базовую структуру**:
+
+*src/context/user/userInputNamesList.js*
+
+    export const userInputNamesList = [`title`, `age`,];
+
+2. **Создаем экшены**:
+
+Пока из необходимых действий нам нужно только обновление store:
 
 *src/context/user/userActions.js*
 
-    export const ADD_CHILD = 'ADD_CHILD';
-    export const REMOVE_CHILD = 'REMOVE_CHILD';
+    export const UPDATE = 'UPDATE';
 
-2. **Создаем редьюсер**:
+3. **Создаем редьюсер**:
 
 Отправляя действия в редьюсер, мы можем воздействовать на стейт определенным образом. Существует несколько паттернов создания редьюсера. В данном случае воспользуемся литералами объекта:
 
 *src/context/user/userReducer.js*
 
-    import {ADD_CHILD, REMOVE_CHILD} from "./userActions";
+    import {UPDATE} from "./userActions";
 
     const handlers = {
-      [ADD_CHILD]: (state, {payload}) => ({
-        ...state, children: [...state, payload]
-      }),
-      [REMOVE_CHILD]: (state, {payload}) => ({
-        ...state, children: state.children.filter(child => child.id !== payload)
+      [UPDATE]: (state, {payload}) => ({
+        ...state, user: payload
       }),
       DEFAULT: state => state,
     };
@@ -131,7 +141,7 @@ Switch итерируется по всем путям и в том случае
       return handle(state, action);
     };
 
-3. **Извлекаем контекст**:
+4. **Извлекаем контекст**:
 
 Именно этот инструмент предоставляет различным компонентам доступ к стейту user:
 
@@ -141,53 +151,54 @@ Switch итерируется по всем путям и в том случае
 
     export const UserContext = createContext();
 
-4. **Соединяем стейт и редьюсер**:
+5. **Создаем хранилище userState**:
 
 Создаем компонент, который содержит 
 - стейт 
 - метод dispatch, который воздействует на стейт
 - набор функции, которые оборачивают dispatch и производят необходимые действия
 
-Данный компонент будет оборачивать все приложение. А в пропсы провайдера передаем и сам стейт и функции взаимодействия {add, remove, user: state}:
+Данный компонент будет оборачивать все приложение. Пока это фейковые значения.
+
+В пропсы провайдера передаем и сам стейт и функции взаимодействия {add, remove, user: state}:
 
 *src/context/user/UserState.js*
 
     import React, {useReducer} from 'react';
-    import {ADD_CHILD, REMOVE_CHILD} from './userActions';
+    import {UPDATE} from './userActions';
     import {UserContext} from "./userContext";
-    import {userFields} from "./userFields";
     import {userReducer} from './userReducer';
 
     const initialState = {
-      userFields,
-      children: [],
-    };
+      user: [
+        {
+          id: 0,
+          ...Object.fromEntries(userInputNamesList.map((inputName) => [inputName, ``]))
+        },
+        {id: 1, title: `Мария`, age: `5`,},
+        {id: 2, title: `Тимофей`, age: `7`,},
+        {id: 3, title: `Владимир`, age: `2`,},
+    ]};
 
     export const UserState = ({children}) => {
       const [state, dispatch] = useReducer(userReducer, initialState);
 
-      const add = (payload) => {
+      const update = (payload) => {
         dispatch({
-          type: ADD_CHILD,
+          type: UPDATE,
           payload,
         });
       };
 
-      const remove = (id) => {
-        dispatch({
-          type: REMOVE_CHILD,
-          payload: id,
-        });
-      };
-
       return (
-        <UserContext.Provider value={{add, remove, user: state}} >
+        <UserContext.Provider value={{update, user: state}} >
           {children}
         </UserContext.Provider>
       );
     };
 
-5. **Оборачиваем все компоненты в UserState**. 
+
+6. **Оборачиваем все компоненты в UserState**. 
 
 Тем самым абсолютно любые компоненты имеют доступ к стейту Alert при использовании его контекста {add, remove, user: state}.
 
@@ -219,7 +230,7 @@ Switch итерируется по всем путям и в том случае
 
     export default App;
 
-6. **Использование контекста в компонентах**.
+7. **Использование контекста в компонентах**.
 
 Все, что нужно теперь для извлечения стейта, это использовать по типу
 
@@ -231,7 +242,7 @@ Switch итерируется по всем путям и в том случае
     import {UserContext} from '../../context/user/userContext';
 
     const Home = () => {
-      const user = useContext(UserContext);
+      const {user, update} = useContext(UserContext);
 
       console.log(`user in Home: `, user);
 
@@ -243,6 +254,3 @@ Switch итерируется по всем путям и в том случае
     };
 
     export default Home;
-
-# Структура
-

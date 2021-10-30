@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, {useState} from 'react';
+import {userInputNamesListRU} from '../../context/user/userInputNamesList';
 import {capFirstLetter} from '../../utils/functions';
 
 const Control = ({memberId: id, inputTitle, inputData, onInputChange}) => {
@@ -15,7 +16,11 @@ const Control = ({memberId: id, inputTitle, inputData, onInputChange}) => {
 
   return (
     <div className="control" >
-      <label className={isFocus ? `control__label active` : `control__label`} htmlFor={inputTitle}>{capFirstLetter(inputTitle)}</label>
+      <label
+        className={isFocus ? `control__label active` : `control__label`}
+        htmlFor={inputTitle}>
+          {capFirstLetter(userInputNamesListRU[inputTitle])}
+      </label>
       <input
         type="text"
         name={inputTitle}

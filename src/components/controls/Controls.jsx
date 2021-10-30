@@ -1,8 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, {Fragment} from 'react';
 import {Control} from '..';
-
-const allowed = [`title`, `age`];
+import {userInputNamesList} from '../../context/user/userInputNamesList';
 
 const Controls = ({entry, onInputChange, onRemove}) => {
 
@@ -15,7 +14,7 @@ const Controls = ({entry, onInputChange, onRemove}) => {
 
   return (
     <Fragment>
-      {Object.keys(entry).filter(key => allowed.includes(key)).map(key => (
+      {Object.keys(entry).filter(key => userInputNamesList.includes(key)).map(key => (
         <Control
           key={key}
           memberId={entry.id}

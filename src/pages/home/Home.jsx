@@ -1,42 +1,40 @@
-/* eslint-disable no-unused-vars */
 import React, {useContext, useState} from 'react';
 import {UserContext} from '../../context/user/userContext';
-import {userFields} from '../../context/user/userFields';
 import {Controls} from '../../components';
-import {nextId} from '../../utils/functions';
+import {createEntry} from '../../utils/functions';
 
 const Home = () => {
   const {user, update} = useContext(UserContext);
-  const [temporary, setTemporary] = useState(user.user);
+  const [temporary, setTemporary] = useState([...user.user]);
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
     update([...temporary]);
   };
 
-  const saveEntryToTemporary = ({target: {name, value}}, id) => {
+  const changeTemporaryEntry = ({target: {name, value}}, id) => {
     setTemporary([...temporary.map(item => item.id === id ? {...item, [name]: value} : item)]);
   };
 
-  const createEntry = () => {
-    setTemporary([...temporary, {id: nextId(temporary), title: ``, age: ``,}]);
+  const createTemporaryEntry = () => {
+    setTemporary([...temporary, createEntry(temporary)]);
   };
 
-  const deleteEntry = (id) => {
+  const deleteTemporaryEntry = (id) => {
     setTemporary([...temporary.filter(item => item.id !== id)]);
   };
 
-  const renderAddEntryButton = (params) => (
+  const renderAddEntryButton = () => (
     <button
-      onClick={createEntry}>Добавить ребенка</button>
+      onClick={createTemporaryEntry}>Добавить ребенка</button>
   );
 
   const renderEntry = (entry) => (
     <li key={entry.id}>
       <Controls
         entry={entry}
-        onInputChange={saveEntryToTemporary}
-        onRemove={deleteEntry} />
+        onInputChange={changeTemporaryEntry}
+        onRemove={deleteTemporaryEntry} />
     </li>
   );
 
@@ -46,7 +44,7 @@ const Home = () => {
         <h2>Персональные данные</h2>
         <Controls
           entry={temporary[0]}
-          onInputChange={saveEntryToTemporary} />
+          onInputChange={changeTemporaryEntry} />
       </section>
       <section className="">
         <div>
