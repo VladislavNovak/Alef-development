@@ -14,7 +14,7 @@ const Home = () => {
     update([...temporary]);
   };
 
-  const saveEntryToTemporary = ({target: {name, value}}, id) => {
+  const saveEntry = ({target: {name, value}}, id) => {
     setTemporary([...temporary.map(item => item.id === id ? {...item, [name]: value} : item)]);
   };
 
@@ -31,22 +31,14 @@ const Home = () => {
       onClick={createEntry}>Добавить ребенка</button>
   );
 
-  const renderEntry = (entry) => (
-    <li key={entry.id}>
-      <Controls
-        entry={entry}
-        onInputChange={saveEntryToTemporary}
-        onRemove={deleteEntry} />
-    </li>
-  );
 
   return (
     <form onSubmit={handleSubmit}>
       <section className="">
         <h2>Персональные данные</h2>
         <Controls
-          entry={temporary[0]}
-          onInputChange={saveEntryToTemporary} />
+          member={temporary[0]}
+          onInputChange={saveEntry} />
       </section>
       <section className="">
         <div>
@@ -54,7 +46,15 @@ const Home = () => {
           {temporary.length < 6 ? renderAddEntryButton() : null}
         </div>
         <ul>
-          {temporary.map(entry => (entry.id ? renderEntry(entry) : null))}
+          {temporary.map(member => (
+            member.id
+              ? (<li key={member.id}>{
+                  <Controls
+                    member={member}
+                    onInputChange={saveEntry}
+                    onRemove={deleteEntry} />
+                }</li>)
+              : null))}
         </ul>
       </section>
       <button type="submit">Сохранить</button>

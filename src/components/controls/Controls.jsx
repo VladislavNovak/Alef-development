@@ -1,26 +1,30 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
+import React, {Fragment} from 'react';
 import {Control} from '..';
 
 const allowed = [`title`, `age`];
 
-const Controls = ({userFieldsX, onInputChange, onRemove}) => {
-  console.log(userFieldsX);
+const Controls = ({entry, onInputChange, onRemove}) => {
+
+  const renderDeleteButton = () => (
+    <button
+      type="button"
+      className="btn btn-danger btn-sm"
+      onClick={() => onRemove(entry.id)} >Удалить</button>
+  );
+
   return (
-    <ul>{
-      Object.keys(userFieldsX).filter(key => allowed.includes(key)).map(key => (
+    <Fragment>
+      {Object.keys(entry).filter(key => allowed.includes(key)).map(key => (
         <Control
           key={key}
+          memberId={entry.id}
           inputTitle={key}
-          inputData={userFieldsX[key]}
+          inputData={entry[key]}
           onInputChange={onInputChange} />
-      ))
-    }
-      <button
-        type="button"
-        className="btn btn-danger btn-sm"
-        onClick={() => onRemove(userFieldsX.id)} >Удалить</button>
-    </ul>
+      ))}
+      {entry.id ? renderDeleteButton() : null}
+    </Fragment>
   );
 };
 

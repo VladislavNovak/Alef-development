@@ -1,11 +1,8 @@
-import {ADD_CHILD, REMOVE_CHILD} from "./userActions";
+import {UPDATE} from "./userActions";
 
 const handlers = {
-  [ADD_CHILD]: (state, {payload}) => ({
-    ...state, children: [...state, payload]
-  }),
-  [REMOVE_CHILD]: (state, {payload}) => ({
-    ...state, children: state.children.filter(child => child.id !== payload)
+  [UPDATE]: (state, {payload}) => ({
+    ...state, user: payload
   }),
   DEFAULT: state => state,
 };

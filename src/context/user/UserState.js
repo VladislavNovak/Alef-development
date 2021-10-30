@@ -1,54 +1,29 @@
 /* eslint-disable react/prop-types */
 import React, {useReducer} from 'react';
-import {ADD_CHILD, REMOVE_CHILD} from './userActions';
+import {UPDATE} from './userActions';
 import {UserContext} from "./userContext";
-// import {userFields} from "./userFields";
 import {userReducer} from './userReducer';
 
 const initialState = {
-  userFieldsX: {
-    id: 0,
-    title: `Иван`,
-    age: 25,
-  },
-  children: [
-    {
-      id: 0,
-      title: `Мария`,
-      age: 5,
-    },
-    {
-      id: 1,
-      title: `Тимофей`,
-      age: 7,
-    },
-    {
-      id: 2,
-      title: `Владимир`,
-      age: 2,
-    },
-],
-};
+  user: [
+  {id: 0, title: `Иван`, age: `25`,},
+  {id: 1, title: `Мария`, age: `5`,},
+  {id: 2, title: `Тимофей`, age: `7`,},
+  {id: 3, title: `Владимир`, age: `2`,},
+]};
 
 export const UserState = ({children}) => {
   const [state, dispatch] = useReducer(userReducer, initialState);
 
-  const add = (payload) => {
+  const update = (payload) => {
     dispatch({
-      type: ADD_CHILD,
+      type: UPDATE,
       payload,
     });
   };
 
-  const remove = (id) => {
-    dispatch({
-      type: REMOVE_CHILD,
-      payload: id,
-    });
-  };
-
   return (
-    <UserContext.Provider value={{add, remove, user: state}} >
+    <UserContext.Provider value={{update, user: state}} >
       {children}
     </UserContext.Provider>
   );
