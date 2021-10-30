@@ -2,6 +2,7 @@ import React, {useContext, useState} from 'react';
 import {UserContext} from '../../context/user/userContext';
 import {Controls} from '../../components';
 import {createEntry} from '../../utils/functions';
+import { MAX_ENTRIES, USER_ENTRIES } from '../../utils/constants';
 
 const Home = () => {
   const {user, update} = useContext(UserContext);
@@ -43,13 +44,13 @@ const Home = () => {
       <section className="">
         <h2>Персональные данные</h2>
         <Controls
-          entry={temporary[0]}
+          entry={temporary[USER_ENTRIES]}
           onInputChange={changeTemporaryEntry} />
       </section>
       <section className="">
         <div>
-          <h3>Дети (макс. 5)</h3>
-          {temporary.length < 6 ? renderAddEntryButton() : null}
+          <h3>Дети (макс. {MAX_ENTRIES - 1})</h3>
+          {temporary.length < (MAX_ENTRIES) ? renderAddEntryButton() : null}
         </div>
         <ul>
           {temporary.map(entry => (entry.id ? renderEntry(entry) : null))}
