@@ -2,7 +2,7 @@ import React, {useContext, useState} from 'react';
 import {UserContext} from '../../context/user/userContext';
 import {Controls} from '../../components';
 import {createEntry} from '../../utils/functions';
-import { MAX_ENTRIES, USER_ENTRIES } from '../../utils/constants';
+import {MAX_ENTRIES, USER_ENTRIES} from '../../utils/constants';
 
 const Home = () => {
   const {user, update} = useContext(UserContext);
@@ -27,11 +27,12 @@ const Home = () => {
 
   const renderAddEntryButton = () => (
     <button
-      onClick={createTemporaryEntry}>Добавить ребенка</button>
+      className="children__btn-add"
+      onClick={createTemporaryEntry}>+ Добавить ребенка</button>
   );
 
   const renderEntry = (entry) => (
-    <li key={entry.id}>
+    <li className="children__child" key={entry.id}>
       <Controls
         entry={entry}
         onInputChange={changeTemporaryEntry}
@@ -41,14 +42,15 @@ const Home = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <section className="">
-        <h2>Персональные данные</h2>
+      <h2 className="visually-hidden">Страница с формой заполнения данных</h2>
+      <section className="person">
+        <h3>Персональные данные</h3>
         <Controls
           entry={temporary[USER_ENTRIES]}
           onInputChange={changeTemporaryEntry} />
       </section>
-      <section className="">
-        <div>
+      <section  className="children">
+        <div className="children__header">
           <h3>Дети (макс. {MAX_ENTRIES - 1})</h3>
           {temporary.length < (MAX_ENTRIES) ? renderAddEntryButton() : null}
         </div>
@@ -56,7 +58,7 @@ const Home = () => {
           {temporary.map(entry => (entry.id ? renderEntry(entry) : null))}
         </ul>
       </section>
-      <button type="submit">Сохранить</button>
+      <button type="submit" className="form__btn-submit">Сохранить</button>
     </form>
   );
 };

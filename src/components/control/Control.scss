@@ -1,0 +1,45 @@
+.control {
+  position: relative;
+}
+
+.person .control__input {
+  margin: 5px 0;
+  width: 100%;
+}
+
+.children .control__input {
+  margin: 5px 5px 5px 0;
+  width: 80%;
+}
+
+.control__label {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+
+  display: block;
+
+  font-size: 13px;
+  line-height: 24px;
+
+  transition: all 0.3s ease;
+
+  &.active {
+    color: rgba(0, 0, 0, 0.48);
+    bottom: 34px;
+  }
+}
+
+.control__input {
+  padding: 26px 10px 6px 10px;
+
+  font-size: 14px;
+  line-height: 24px;
+
+  border: solid 1px $border-gray;
+  background: none;
+
+  &:focus {
+    outline: 0;
+  }
+}

@@ -9,14 +9,16 @@ function App() {
   return (
     <UserState>
       <BrowserRouter>
+        <div className="container">
           <Navbar />
-          <div className="container">
+          <main>
             <Switch>
               {publicRoutes.map(({title, path, Component}) => <Route key={title} path={path} component={Component} exact />)}
               <Redirect to={HOME_ROUTE} />
             </Switch>
-          </div>
+          </main>
           <Bottom />
+        </div>
       </BrowserRouter>
     </UserState>
   );

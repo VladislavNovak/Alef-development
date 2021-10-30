@@ -3,9 +3,13 @@ import React, {useState} from 'react';
 import {userInputNamesListRU} from '../../context/user/userInputNamesList';
 import {capFirstLetter} from '../../utils/functions';
 
+const checkFocus = (value) => (
+  value ? true : false
+);
+
 const Control = ({memberId: id, inputTitle, inputData, onInputChange}) => {
 
-  const [isFocus, setFocus] = useState(false);
+  const [isFocus, setFocus] = useState(checkFocus(inputData));
 
   const handleInputFocus = ({target}, status) => {
     if (target.value) {

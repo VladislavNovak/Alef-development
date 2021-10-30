@@ -8,7 +8,7 @@ const Controls = ({entry, onInputChange, onRemove}) => {
   const renderDeleteButton = () => (
     <button
       type="button"
-      className="btn btn-danger btn-sm"
+      className="children__btn-delete"
       onClick={() => onRemove(entry.id)} >Удалить</button>
   );
 
