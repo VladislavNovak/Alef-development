@@ -6,6 +6,8 @@ const Preview = () => {
   const {user} = useContext(UserContext);
   const data = [...user.user];
 
+  console.log(data.length);
+
   const renderPersonalData = ({title, age}) => (
     <p>{title}, {age ? `${age} лет` : null}</p>
   );
@@ -25,7 +27,7 @@ const Preview = () => {
       </section>
       <section  className="preview">
         <h3>Дети</h3>
-        {(data.length < 1) ? (<ul>{data.map(entry => (entry.id ? renderEntry(entry) : null))}</ul>) : <p>Данные отсутствуют</p>}
+        {(data.length < 2) ? <p>Данные отсутствуют</p> : (<ul>{data.map(entry => (entry.id ? renderEntry(entry) : null))}</ul>)}
       </section>
     </Fragment>
   );

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
-import {userInputNamesListRU} from '../../context/user/userInputNamesList';
+import {userInputNamesList, userInputNamesListRU} from '../../context/user/userInputNamesList';
 import {capFirstLetter} from '../../utils/functions';
 
 const checkFocus = (value) => (
@@ -26,7 +26,7 @@ const Control = ({memberId: id, inputTitle, inputData, onInputChange}) => {
           {capFirstLetter(userInputNamesListRU[inputTitle])}
       </label>
       <input
-        type="text"
+        type={inputTitle === userInputNamesList[1] ? `number` : `text`}
         name={inputTitle}
         value={inputData}
         onChange={(evt) => onInputChange(evt, id)}

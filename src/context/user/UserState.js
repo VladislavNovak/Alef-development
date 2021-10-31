@@ -8,9 +8,6 @@ import {userReducer} from './userReducer';
 const initialState = {
   user: [
     createEntry(),
-    {id: 1, title: `Мария`, age: `5`,},
-    {id: 2, title: `Тимофей`, age: `7`,},
-    {id: 3, title: `Владимир`, age: `2`,},
 ]};
 
 export const UserState = ({children}) => {
