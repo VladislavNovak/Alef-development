@@ -1,5 +1,5 @@
-/* eslint-disable react/prop-types */
 import React, {useState} from 'react';
+import PropTypes from 'prop-types';
 import {userInputNamesListRU} from '../../context/user/userInputNamesList';
 import {capFirstLetter} from '../../utils/functions';
 
@@ -38,6 +38,14 @@ const Control = ({memberId: id, inputTitle, inputData, onInputChange}) => {
     </div>
   );
 };
+
+Control.propTypes = {
+  memberId: PropTypes.number,
+  inputTitle: PropTypes.string,
+  inputData: PropTypes.string,
+  onInputChange: PropTypes.func.isRequired,
+};
+
 
 export default Control;
 

@@ -2,20 +2,25 @@
   position: relative;
 }
 
+.children__child .control {
+  display: inline-block;
+  width: calc((100% - 75px) / 2 - 10px)
+}
+
 .person .control__input {
-  margin: 5px 0;
-  width: 100%;
+  margin: 4px 0;
+  width: calc(100% - 10px - 15px);
 }
 
 .children .control__input {
   margin: 5px 5px 5px 0;
-  width: 80%;
+  width: calc(100% - 15px - 10px);
 }
 
 .control__label {
   position: absolute;
-  bottom: 12px;
-  left: 12px;
+  bottom: 15px;
+  left: 16px;
 
   display: block;
 
@@ -26,12 +31,12 @@
 
   &.active {
     color: rgba(0, 0, 0, 0.48);
-    bottom: 34px;
+    bottom: 35px;
   }
 }
 
 .control__input {
-  padding: 26px 10px 6px 10px;
+  padding: 24px 10px 8px 15px;
 
   font-size: 14px;
   line-height: 24px;

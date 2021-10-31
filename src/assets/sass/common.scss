@@ -20,17 +20,25 @@ button {
   border-radius: 100px;
   font-size: 14px;
   line-height: 24px;
+
+  font-family: inherit;
   cursor: pointer;
 }
 
-form, input {
+section {
+  margin-bottom: 21px;
+}
+
+input {
   font-family: inherit;
   margin: 0;
 }
 
 form {
-  width: 50%;
-  margin: 60px auto;
+  width: 45.4%;
+  margin: 13px 13px auto 15px;
+
+  font-family: inherit;
 }
 
 main {
@@ -77,26 +85,52 @@ footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-
-
 }
 
 .children__btn-delete {
-    border: none;
-    background-color: inherit;
-    color: $primary-blue;
+  border: none;
+  background-color: inherit;
+  color: $primary-blue;
 }
 
 .children__btn-add {
+  display: flex;
+  padding: 8px 22px;
+
   border: 2px solid $primary-blue;
   color: $primary-blue;
   background-color: inherit;
+
+  & span {
+    padding-right: 2px;
+    font-size: 36px;
+  }
 }
 
 .form__btn-submit {
+  padding: 8px 22px;
   border: 2px solid $primary-blue;
   color: white;
   background-color: $primary-blue;
+}
+
+.preview {
+  width: 45%;
+  padding: 14px 10px 0 10px;
+
+  & p {
+    font-weight: 700;
+    margin-top: 21px;
+  }
+
+  & li > p {
+    display: inline-block;
+    margin: 0 0 21px 0;
+    padding: 12px 17px 12px 20px;
+    font-weight: 700;
+
+    background-color: $bg-preview;
+  }
 }
 
 .visually-hidden {

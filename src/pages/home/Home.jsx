@@ -28,7 +28,7 @@ const Home = () => {
   const renderAddEntryButton = () => (
     <button
       className="children__btn-add"
-      onClick={createTemporaryEntry}>+ Добавить ребенка</button>
+      onClick={createTemporaryEntry}><span>+</span>&nbsp;Добавить ребенка</button>
   );
 
   const renderEntry = (entry) => (

@@ -1,5 +1,5 @@
-/* eslint-disable react/prop-types */
 import React, {Fragment} from 'react';
+import PropTypes from 'prop-types';
 import {Control} from '..';
 import {userInputNamesList} from '../../context/user/userInputNamesList';
 
@@ -25,6 +25,16 @@ const Controls = ({entry, onInputChange, onRemove}) => {
       {entry.id ? renderDeleteButton() : null}
     </Fragment>
   );
+};
+
+Controls.propTypes = {
+  entry: PropTypes.shape({
+    id: PropTypes.number,
+    title: PropTypes.string,
+    age: PropTypes.string,
+  }),
+  onInputChange: PropTypes.func.isRequired,
+  onRemove: PropTypes.func,
 };
 
 export default Controls;
