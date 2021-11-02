@@ -1,5 +1,5 @@
-/* eslint-disable react/prop-types */
 import React, {useReducer} from 'react';
+import PropTypes from 'prop-types';
 import {createEntry} from '../../utils/functions';
 import {UPDATE} from './userActions';
 import {UserContext} from "./userContext";
@@ -25,4 +25,8 @@ export const UserState = ({children}) => {
       {children}
     </UserContext.Provider>
   );
+};
+
+UserState.propTypes = {
+  children: PropTypes.node.isRequired
 };

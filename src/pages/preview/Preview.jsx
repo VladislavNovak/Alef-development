@@ -6,8 +6,6 @@ const Preview = () => {
   const {user} = useContext(UserContext);
   const data = [...user.user];
 
-  console.log(data.length);
-
   const renderPersonalData = ({title, age}) => (
     <p>{title}, {age ? `${age} лет` : null}</p>
   );
