@@ -24,8 +24,7 @@
 
   display: block;
 
-  font-size: 13px;
-  line-height: 24px;
+  @include text-style--16-24(13);
 
   transition: all 0.3s ease;
 
@@ -38,8 +37,7 @@
 .control__input {
   padding: 24px 10px 8px 15px;
 
-  font-size: 14px;
-  line-height: 24px;
+  @include text-style--16-24(14);
 
   border: solid 1px $border-gray;
   background: none;

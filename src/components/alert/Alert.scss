@@ -1,0 +1,57 @@
+.alert-wrapper {
+  width: $main-width;
+  min-height: 71px;
+}
+
+.alert {
+  @include text-style--16-24(13);
+  display: flex;
+  justify-content: center;
+
+  border-radius: $main-radius;
+
+  margin-top: 15px;
+  padding: 15px;
+
+  transition: all .3s ease-in-out;
+  transform: translateX(0%);
+
+  &:hover {
+    transform: translateX(0%);
+  }
+
+  &--warning {
+    animation: scale-in-center 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+    background-color: $alert-bg-warning;
+    color: $alert-color-warning;
+    border-color: $alert-border-warning;
+  }
+
+  &--danger {
+    animation: scale-in-center 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+    background-color: $alert-bg-danger;
+    color: $alert-color-danger;
+    border-color: $alert-border-danger;
+  }
+
+  &--success {
+    animation: scale-out-center 0.5s cubic-bezier(0.550, 0.085, 0.680, 0.530) both;
+    background-color: $alert-bg-success;
+    color: $alert-color-success;
+    border-color: $alert-border-success;
+  }
+
+  & strong {
+    padding-right: 10px;
+  }
+}
+
+.alert__btn-hide {
+  @include text-style--16-24(26);
+  color: inherit;
+  margin-left: auto;
+
+  background-color: transparent;
+  border: none;
+  outline: none;
+}

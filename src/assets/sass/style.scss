@@ -1,6 +1,9 @@
 @import "./fonts.scss";
 @import "./variables.scss";
+@import "./mixins.scss";
 @import "./common.scss";
+@import "./animation.scss";
 
 @import "../../components/navbar/Navbar.scss";
 @import "../../components/control/Control.scss";
+@import "../../components/alert/Alert.scss";

@@ -24,13 +24,11 @@
 }
 
 .navbar__link {
-  font-size: 13px;
-  line-height: 16px;
-
-  color: rgba(17, 17, 17, 0.48);
+  @include text-style--16-24(13, 16);
 
   position: relative;
-  transition: all ease-in-out 550ms;
+
+  color: rgba(17, 17, 17, 0.48);
 
   &::after {
     content: "";

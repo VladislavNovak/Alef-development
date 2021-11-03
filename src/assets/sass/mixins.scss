@@ -1,0 +1,16 @@
+@mixin text-style--16-24 ($size: 16, $height: 24) {
+  font-size: #{$size}px;
+  line-height: #{$height}px;
+}
+
+@mixin button-translate {
+  &:hover {
+    box-shadow: 1px 1px 2px rgba(0,0,0, .5);
+    transform: translate(-0.5px, -0.5px);
+  }
+
+  &:active {
+    box-shadow: 2px 2px 3px rgba(0,0,0, .5);
+  }
+}
+

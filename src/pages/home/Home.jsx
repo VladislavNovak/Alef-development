@@ -1,27 +1,52 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {UserContext} from '../../context/user/userContext';
 import {Controls} from '../../components';
 import {createEntry} from '../../utils/functions';
 import {MAX_ENTRIES, USER_ENTRIES} from '../../utils/constants';
+import {AlertContext} from '../../context/alert/alertContext';
+import {alertStyles} from '../../context/alert/alertStyles';
+
+const getWarningMsg = (entry) => {
+  const cause = !entry.title ? `имя`: `возраст`;
+  return `Внимание: ${entry.id ? `Данные ребенка (${cause}) не введены` : `Персональные данные (${cause}) не введены`}`;
+};
 
 const Home = () => {
   const {user, update} = useContext(UserContext);
+  const {changeAlert, hideAlert} = useContext(AlertContext);
   const [temporary, setTemporary] = useState([...user.user]);
+  const [isSaved, setSaved] = useState(false);
+
+  useEffect(() => {
+    const foundEmptyEntry = temporary.find(({title, age}) => !title || !age);
+
+    if (foundEmptyEntry) {
+      changeAlert(alertStyles.WARNING, getWarningMsg(foundEmptyEntry));
+    } else if (!isSaved) {
+      changeAlert(alertStyles.DANGER, `Внимание: данные не сохранены`);
+    } else {
+      hideAlert();
+    }
+  }, [temporary, user]);
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
+    if (!isSaved) setSaved(true);
     update([...temporary]);
   };
 
   const changeTemporaryEntry = ({target: {name, value}}, id) => {
+    if (isSaved) setSaved(false);
     setTemporary([...temporary.map(item => item.id === id ? {...item, [name]: value} : item)]);
   };
 
   const createTemporaryEntry = () => {
+    if (isSaved) setSaved(false);
     setTemporary([...temporary, createEntry(temporary)]);
   };
 
   const deleteTemporaryEntry = (id) => {
+    if (isSaved) setSaved(false);
     setTemporary([...temporary.filter(item => item.id !== id)]);
   };
 
