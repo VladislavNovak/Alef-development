@@ -1,16 +1,17 @@
-Использует **React**, **Redux**.
+Использует **React**, **Redux**, **SCSS**.
 
-Реализует функционал приложения, где пользователь может заполнить информацию о себе и своих детях.
+Реализует функционал приложения, где пользователь может заполнить информацию о себе и своих детях. Основная задача - создание проекта с высокой масштабируемостью.
 
-Статус: стадия разработки. 
+Статус: разработка завершена. 
 
 -----
 
 ![Screenshot](Screenshot_15.png)
 
 - [Маршрутизация](#Маршрутизация)
-- [useContext](#useContext)
 - [Структура](#Структура)
+- [userContext](#userContext)
+- [alertContext](#alertContext)
 
 # Маршрутизация
 
@@ -97,7 +98,51 @@ Switch итерируется по всем путям и в том случае
 
     export default App;
 
-# useContext
+# Структура
+
+Структура основывается на базовам объекте типа {id: 1, title: `Мария`, age: `5`,}.
+
+## Control
+
+Находится в основании структуры. Отрисовывает группу состоящую из label+input. 
+
+Получает:
+- memberId - идентификатор, который обозначает, к какому объекту данная группа принадлежит 
+- inputTitle - имя поля
+- inputData - значение поля
+
+Возвращает: 
+- onInputChange - символ при изменении в input
+
+## Controls
+
+Средняя часть. Отрисовывает несколько компонентов Control и button:remove
+
+Получает:
+- entry - главный объект типа {id: 1, title: `Мария`, age: `5`,}
+
+Возвращает: 
+- onInputChange - символ при изменении в input
+- onRemove - клик на button:remove
+
+## Home
+
+Страница Home состоит из двух практически идентичных частей разнесенных в теги section. Они включают компонент Controls, с той лишь разницей, что в первой отрисовывается лишь array[0] из хранилища, а во второй - в цикле - весь array за исключением array[0]. 
+
+Передает в Controls 
+- главный объект типа {id: 1, title: `Мария`, age: `5`,}
+
+Получает: 
+- onInputChange, который в функции changeTemporaryEntry сохраняет введенные в инпут изменения во временный стор temporary
+- onRemove, который в функции deleteTemporaryEntry удаляет группу Controls по id
+
+Помимо этого страница содержит 
+- temporary - временное хранилище, с которым ведутся все текущие операции
+- createTemporaryEntry - создает новую запись (главный объект типа {id: 1, title: `Мария`, age: `5`,})
+- handleSubmit - это основа взаимодействия между userStore и temporary. Сохраняет данные temporary в userStore
+
+
+# userContext
 
 Задача следующая: изменения в форме (на странице Home) временные и сбрасываются при, например, марщрутизации. Но их можно сохранить в store посредством клика на кнопке "Сохранить". В этом случае результат будет также отражаться и на странице Preview
 
@@ -160,7 +205,7 @@ Switch итерируется по всем путям и в том случае
 - метод dispatch, который воздействует на стейт
 - набор функции, которые оборачивают dispatch и производят необходимые действия
 
-Данный компонент будет оборачивать все приложение. Пока это фейковые значения.
+Данный компонент будет оборачивать все приложение. Пока это моковые значения.
 
 В пропсы провайдера передаем и сам стейт и функции взаимодействия {add, remove, user: state}:
 
@@ -186,10 +231,7 @@ Switch итерируется по всем путям и в том случае
       const [state, dispatch] = useReducer(userReducer, initialState);
 
       const update = (payload) => {
-        dispatch({
-          type: UPDATE,
-          payload,
-        });
+        dispatch({type: UPDATE, payload});
       };
 
       return (
@@ -199,10 +241,9 @@ Switch итерируется по всем путям и в том случае
       );
     };
 
-
 6. **Оборачиваем все компоненты в UserState**. 
 
-Тем самым абсолютно любые компоненты имеют доступ к стейту Alert при использовании его контекста {add, remove, user: state}.
+Тем самым абсолютно любые компоненты имеют доступ к стейту User при использовании его контекста {add, remove, user: state}.
 
 *src/App.js*
 
@@ -257,45 +298,206 @@ Switch итерируется по всем путям и в том случае
 
     export default Home;
 
-# Структура
+# alertContext 
 
-Структура основывается на базовам объекте типа {id: 1, title: `Мария`, age: `5`,}.
+Позволяет отслеживать и реагировать на изменения во временном хранилище (находится на страничке Home и обозначается как temporary) и, в зависимости от значений - изменять компонент с сообщением (назовем Alert)
 
-## Control
+Запланируем все возможные стили и соответствующие им сообщения:
 
-Находится в основании структуры. Отрисовывает группу состоящую из label+input. 
+- success - все данные верно заполнены
+- warning - данные заполнены, но не сохранены в основном хранилище (userState)
+- danger - данные не заполнены (например, одно из полей пусто)
+- closed - компонент с сообщением скрывается через некоторое время после стиля success
 
-Получает:
-- memberId - идентификатор, который обозначает, к какому объекту данная группа принадлежит 
-- inputTitle - имя поля
-- inputData - значение поля
+Итак, приступим
 
-Возвращает: 
-- onInputChange - символ при изменении в input
+1. **alert-стили**
 
-## Controls
+Перечислим константы которые отвечают за все возможные стили
 
-Средняя часть. Отрисовывает несколько компонентов Control и button:remove
+*src/context/alert/alertStyles.js*
 
-Получает:
-- entry - главный объект типа {id: 1, title: `Мария`, age: `5`,}
+    export const alertStyles = {
+      SUCCESS: 'success', WARNING: 'warning', DANGER: 'danger', CLOSED: 'closed'};
 
-Возвращает: 
-- onInputChange - символ при изменении в input
-- onRemove - клик на button:remove
+Этим стилям будет соответствовать стилевое оформление. Например:
 
-## Home
+*src/components/alert/Alert.scss*
 
-Страница Home состоит из двух практически идентичных частей разнесенных в теги section. Они включают компонент Controls, с той лишь разницей, что в первой отрисовывается лишь array[0] из хранилища, а во второй - в цикле - весь array за исключением array[0]. 
+    .alert {
+      &--warning {
+        background-color: #842029;
+      }
+    }
 
-Передает в Controls 
-- главный объект типа {id: 1, title: `Мария`, age: `5`,}
+2. **Создаем экшены**:
 
-Получает: 
-- onInputChange, который в функции changeTemporaryEntry сохраняет введенные в инпут изменения во временный стор temporary
-- onRemove, который в функции deleteTemporaryEntry удаляет группу Controls по id
+Пока из необходимых действий нам нужно только смена-обновление стилей store:
 
-Помимо этого страница содержит 
-- temporary - временное хранилище, с которым ведутся все текущие операции
-- createTemporaryEntry - создает новую запись (главный объект типа {id: 1, title: `Мария`, age: `5`,})
-- handleSubmit - это основа взаимодействия между userStore и temporary. Сохраняет данные temporary в userStore
+*src/context/alert/alertActions.js*
+
+    export const CHANGE_STYLE = `CHANGE_STYLE`;
+
+3. **Создаем редьюсер**:
+
+Отправляя действия в редьюсер, мы можем воздействовать на стейт определенным образом. Существует несколько паттернов создания редьюсера. В данном случае воспользуемся литералами объекта:
+
+*src/context/alert/alertReducer.js*
+
+    import {CHANGE_STYLE} from './alertActions';
+
+    const handlers = {
+      [CHANGE_STYLE]: (state, {payload}) => ({
+        ...state, ...payload,
+      }),
+      DEFAULT: state => state,
+    };
+
+    export const alertReducer = (state, action) => {
+      const handle = handlers[action.type] || handlers.DEFAULT;
+      return handle(state, action);
+    };
+
+4. **Извлекаем контекст**:
+
+Именно этот инструмент предоставляет различным компонентам доступ к стейту user:
+
+*src/context/alert/alertContext.js*
+
+    import {createContext} from "react";
+
+    export const AlertContext = createContext();
+
+5. **Создаем хранилище alertState**:
+
+Создаем компонент, который содержит 
+- стейт 
+- метод dispatch, который воздействует на стейт
+- набор функции, которые оборачивают dispatch и производят необходимые действия
+
+Обратим внимание: каждая из функций (changeAlert, hideAlert) по сути использует один и тот же экшн.
+
+Данный компонент будет оборачивать все приложение.
+
+В пропсы провайдера передаем и сам стейт и функции взаимодействия {add, remove, user: state}:
+
+    import React, {useReducer} from 'react';
+    import PropTypes from 'prop-types';
+    import {CHANGE_STYLE} from './alertActions';
+    import {AlertContext} from "./alertContext";
+    import {alertReducer} from "./alertReducer";
+    import {alertStyles} from './alertStyles';
+
+    const initialState = {
+      style: alertStyles.CLOSED,
+      msg: ``,
+    };
+
+    export const AlertState = ({children}) => {
+      const [state, dispatch] = useReducer(alertReducer, initialState);
+
+      const changeAlert = (style, msg) => dispatch({
+        type: CHANGE_STYLE, payload: {style, msg}});
+
+      const hideAlert = () => dispatch({
+        type: CHANGE_STYLE, payload: {style: alertStyles.CLOSED, msg: ``}});
+
+      return (
+        <AlertContext.Provider value={{changeAlert, hideAlert, alert: state}}>
+          {children}
+        </AlertContext.Provider>
+      );
+    };
+
+    AlertState.propTypes = {
+      children: PropTypes.node.isRequired
+    };
+
+6. **Оборачиваем все компоненты в AlertState**. 
+
+Тем самым абсолютно любые компоненты имеют доступ к стейту Alert при использовании его контекста {changeAlert, hideAlert, alert: state}.
+
+*src/App.js*
+
+    import React from 'react';
+    import {BrowserRouter, Switch, Route, Redirect} from "react-router-dom";
+    import {Alert, Bottom, Navbar} from './components';
+    import {AlertState} from './context/alert/AlertState';
+    import {UserState} from './context/user/UserState';
+    import {HOME_ROUTE} from './routes/constants';
+    import {publicRoutes} from './routes/routes';
+
+    function App() {
+      return (
+        <UserState>
+          <AlertState>
+            <BrowserRouter>
+              <div className="container">
+                <Navbar />
+                <main>
+                  <Alert />
+                  <Switch>
+                    {publicRoutes.map(({title, path, Component}) => <Route key={title} path={path} component={Component} exact />)}
+                    <Redirect to={HOME_ROUTE} />
+                  </Switch>
+                </main>
+                <Bottom />
+              </div>
+            </BrowserRouter>
+          </AlertState>
+        </UserState>
+      );
+    }
+
+    export default App;
+
+7. **Alert компонент**.
+
+В целевой компонет для отрисовки будет передаваться из стора стиль (alert.style) и текст (alert.style):
+
+*src/components/alert/Alert.jsx*
+
+    import React, {useContext} from 'react';
+    import {AlertContext} from '../../context/alert/alertContext';
+
+    const Alert = () => {
+      const {alert} = useContext(AlertContext);
+
+      return (
+        <div className="alert-wrapper">
+          <div className={`alert alert--${alert.style}`}>
+            <span>{alert.msg}</span>
+          </div>
+        </div>
+      );
+    };
+
+    export default Alert;
+
+7. **Использование контекста в компонентах**.
+
+Основное же взаимодействие со стором AlertState будет происходить на странице Home. Если найдена во временном хранилище объекты с пустыми полями, то кидаем WARNING. Если во всех полях введены данные, но временный стор не сохранен в userState (за что отвечает флаг isSave), тогда кидаем DANGER. В остальных случаях - кидаем SUCCESS и через некоторое время эту надпить прячем (hideAlert)
+
+*src/pages/home/Home.jsx*
+
+    import {AlertContext} from '../../context/alert/alertContext';
+    const {changeAlert, hideAlert} = useContext(AlertContext);
+
+    useEffect(() => {
+      const foundEmptyEntry = temporary.find(({title, age}) => !title || !age);
+
+      if (foundEmptyEntry) {
+        changeAlert(alertStyles.WARNING, `Внимание: Данные ребенка не введены`);
+      } else if (!isSaved) {
+        changeAlert(alertStyles.DANGER, `Внимание: данные не сохранены`);
+      } else {
+        changeAlert(alertStyles.SUCCESS, `Данные успешно сохранены`);
+
+        let timerId = setTimeout(() => {
+          hideAlert();
+        }, 3000);
+
+        return () => clearTimeout(timerId);
+      }
+    }, [temporary, user]);
+    

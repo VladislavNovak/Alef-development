@@ -26,6 +26,8 @@
 
   @include text-style--16-24(13);
 
+  pointer-events: none;
+
   transition: all 0.3s ease;
 
   &.active {

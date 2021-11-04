@@ -35,10 +35,17 @@
   }
 
   &--success {
-    animation: scale-out-center 0.5s cubic-bezier(0.550, 0.085, 0.680, 0.530) both;
+    animation: scale-in-center 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
     background-color: $alert-bg-success;
     color: $alert-color-success;
     border-color: $alert-border-success;
+  }
+
+  &--closed {
+    animation: scale-out-center 0.5s cubic-bezier(0.550, 0.085, 0.680, 0.530) both;
+    background-color: $alert-bg-closed;
+    color: $alert-color-closed;
+    border-color: $alert-border-closed;
   }
 
   & strong {

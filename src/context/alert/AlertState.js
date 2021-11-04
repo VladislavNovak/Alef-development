@@ -6,23 +6,21 @@ import {alertReducer} from "./alertReducer";
 import {alertStyles} from './alertStyles';
 
 const initialState = {
-  style: alertStyles.SUCCESS,
+  style: alertStyles.CLOSED,
   msg: ``,
 };
 
 export const AlertState = ({children}) => {
   const [state, dispatch] = useReducer(alertReducer, initialState);
 
-  const changeAlert = (style, msg) => {
-    dispatch({
-      type: CHANGE_STYLE,
-      payload: {style, msg},
-    });
-  };
+  const changeAlert = (style, msg) => dispatch({
+    type: CHANGE_STYLE,
+    payload: {style, msg},
+  });
 
   const hideAlert = () => dispatch({
     type: CHANGE_STYLE,
-    payload: {style: alertStyles.SUCCESS, msg: ``},
+    payload: {style: alertStyles.CLOSED, msg: ``},
   });
 
   return (

@@ -25,7 +25,13 @@ const Home = () => {
     } else if (!isSaved) {
       changeAlert(alertStyles.DANGER, `Внимание: данные не сохранены`);
     } else {
-      hideAlert();
+      changeAlert(alertStyles.SUCCESS, `Данные успешно сохранены`);
+
+      let timerId = setTimeout(() => {
+        hideAlert();
+      }, 3000);
+
+      return () => clearTimeout(timerId);
     }
   }, [temporary, user]);
 
