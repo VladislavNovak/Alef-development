@@ -1,7 +1,7 @@
 import React, {Fragment} from 'react';
 import PropTypes from 'prop-types';
 import {Control} from '..';
-import {userInputNamesList} from '../../context/user/userInputNamesList';
+import {userControls} from '../../context/user/userControls';
 
 const Controls = ({entry, onInputChange, onRemove}) => {
 
@@ -14,7 +14,7 @@ const Controls = ({entry, onInputChange, onRemove}) => {
 
   return (
     <Fragment>
-      {Object.keys(entry).filter(key => userInputNamesList.includes(key)).map(key => (
+      {Object.keys(entry).filter(key => Object.keys(userControls).includes(key)).map(key => (
         <Control
           key={key}
           memberId={entry.id}

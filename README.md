@@ -156,9 +156,9 @@ Switch итерируется по всем путям и в том случае
 
 1. **Создаем базовую структуру**:
 
-*src/context/user/userInputNamesList.js*
+*src/context/user/userControlsNames.js*
 
-    export const userInputNamesList = [`title`, `age`,];
+    export const userControlsNames = [`title`, `age`,];
 
 2. **Создаем экшены**:
 
@@ -220,7 +220,7 @@ Switch итерируется по всем путям и в том случае
       user: [
         {
           id: 0,
-          ...Object.fromEntries(userInputNamesList.map((inputName) => [inputName, ``]))
+          ...Object.fromEntries(userControlsNames.map((inputName) => [inputName, ``]))
         },
         {id: 1, title: `Мария`, age: `5`,},
         {id: 2, title: `Тимофей`, age: `7`,},

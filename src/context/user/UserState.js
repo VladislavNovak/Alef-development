@@ -4,10 +4,11 @@ import {createEntry} from '../../utils/functions';
 import {UPDATE} from './userActions';
 import {UserContext} from "./userContext";
 import {userReducer} from './userReducer';
+import {userControlsNames} from './userControls';
 
 const initialState = {
   user: [
-    createEntry(),
+    createEntry(userControlsNames),
 ]};
 
 export const UserState = ({children}) => {

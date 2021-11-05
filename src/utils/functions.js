@@ -1,5 +1,3 @@
-import {userInputNamesList} from "../context/user/userInputNamesList";
-
 // Получает слово и возвращает это же слова с заглавной первой буквой
 export const capFirstLetter = (item) => (typeof item !== `string`) ? item : item[0].toUpperCase() + item.slice(1);
 
@@ -9,12 +7,13 @@ const nextId = (arr) => {
   return maxId + 1;
 };
 
-// Возвращает объект типа
-// id: 0 || maxID, userInputNamesList: ``
-export const createEntry = (arr = null) => (
+// Получает массив из ключей userControls типа [`title`, `age`, и т.д]
+// и массив объектов типа [{id: 0, title: '', age: ''}]
+// Возвращает объект типа {id: maxID, title: '', age: ''}
+export const createEntry = (names, arr = null) => (
   {
     id: arr ? nextId(arr) : 0,
-    ...Object.fromEntries(userInputNamesList.map((inputName) => [inputName, ``]))
+    ...Object.fromEntries(names.map((name) => [name, ``]))
   }
 );
 

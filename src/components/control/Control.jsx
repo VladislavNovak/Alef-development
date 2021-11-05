@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
-import {userInputList, TITLE} from '../../context/user/userInputNamesList';
+import {userControls, TITLE} from '../../context/user/userControls';
 import {capFirstLetter, inputValidation} from '../../utils/functions';
 
 const Control = ({memberId: id, inputTitle, inputData, onInputChange}) => {
@@ -25,10 +25,10 @@ const Control = ({memberId: id, inputTitle, inputData, onInputChange}) => {
       <label
         className={isFocus ? `control__label active` : `control__label`}
         htmlFor={inputTitle}>
-          {capFirstLetter(userInputList[inputTitle].ru)}
+          {capFirstLetter(userControls[inputTitle].ru)}
       </label>
       <input
-        type={userInputList[inputTitle].type}
+        type={userControls[inputTitle].type}
         name={inputTitle}
         value={inputData}
         onChange={(evt) => handleInputChange(evt, id)}

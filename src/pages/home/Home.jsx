@@ -5,6 +5,7 @@ import {createEntry} from '../../utils/functions';
 import {MAX_ENTRIES, USER_ENTRIES} from '../../utils/constants';
 import {AlertContext} from '../../context/alert/alertContext';
 import {alertStyles} from '../../context/alert/alertStyles';
+import {userControlsNames} from '../../context/user/userControls';
 
 const getWarningMsg = (entry) => {
   const cause = !entry.title ? `имя`: `возраст`;
@@ -48,7 +49,7 @@ const Home = () => {
 
   const createTemporaryEntry = () => {
     if (isSaved) setSaved(false);
-    setTemporary([...temporary, createEntry(temporary)]);
+    setTemporary([...temporary, createEntry(userControlsNames, temporary)]);
   };
 
   const deleteTemporaryEntry = (id) => {
