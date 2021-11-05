@@ -1,15 +1,11 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
-import {userInputNamesList, userInputNamesListRU} from '../../context/user/userInputNamesList';
-import {capFirstLetter} from '../../utils/functions';
-
-const checkFocus = (value) => (
-  value ? true : false
-);
+import {userInputList, TITLE} from '../../context/user/userInputNamesList';
+import {capFirstLetter, inputValidation} from '../../utils/functions';
 
 const Control = ({memberId: id, inputTitle, inputData, onInputChange}) => {
 
-  const [isFocus, setFocus] = useState(checkFocus(inputData));
+  const [isFocus, setFocus] = useState(inputData ? true : false);
 
   const handleInputFocus = ({target}, status) => {
     if (target.value) {
@@ -18,18 +14,24 @@ const Control = ({memberId: id, inputTitle, inputData, onInputChange}) => {
     setFocus(status);
   };
 
+  const handleInputChange = ({target: {name, value}}, id) => (
+    (inputTitle === TITLE)
+    ? inputValidation(name, value, id, onInputChange)
+    : onInputChange(name, value, id)
+  );
+
   return (
     <div className="control" >
       <label
         className={isFocus ? `control__label active` : `control__label`}
         htmlFor={inputTitle}>
-          {capFirstLetter(userInputNamesListRU[inputTitle])}
+          {capFirstLetter(userInputList[inputTitle].ru)}
       </label>
       <input
-        type={inputTitle === userInputNamesList[1] ? `number` : `text`}
+        type={userInputList[inputTitle].type}
         name={inputTitle}
         value={inputData}
-        onChange={(evt) => onInputChange(evt, id)}
+        onChange={(evt) => handleInputChange(evt, id)}
         onFocus={(evt) => handleInputFocus(evt, true)}
         onBlur={(evt) => handleInputFocus(evt, false)}
         className="control__input"

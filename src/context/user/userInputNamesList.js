@@ -1,6 +1,15 @@
-export const userInputNamesList = [`title`, `age`];
+export const TITLE = `title`;
+export const AGE = `age`;
 
-export const userInputNamesListRU = {
-  title: `имя`,
-  age: `возраст`
+export const userInputList = {
+  [TITLE]: {
+    ru: `имя`,
+    type: `text`,
+  },
+  [AGE]: {
+    ru: `возраст`,
+    type: `number`,
+  },
 };
+
+export const userInputNamesList = Object.keys(userInputList);

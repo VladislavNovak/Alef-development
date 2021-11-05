@@ -41,7 +41,7 @@ const Home = () => {
     update([...temporary]);
   };
 
-  const changeTemporaryEntry = ({target: {name, value}}, id) => {
+  const changeTemporaryEntry = (name, value, id) => {
     if (isSaved) setSaved(false);
     setTemporary([...temporary.map(item => item.id === id ? {...item, [name]: value} : item)]);
   };

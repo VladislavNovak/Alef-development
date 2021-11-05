@@ -9,12 +9,26 @@ const nextId = (arr) => {
   return maxId + 1;
 };
 
-// Возвращает объект состоящий из
-// 1. id = 0 или, если передан массив, наибольшему в нем id
-// 2. полей userInputNamesList = ``
+// Возвращает объект типа
+// id: 0 || maxID, userInputNamesList: ``
 export const createEntry = (arr = null) => (
   {
     id: arr ? nextId(arr) : 0,
     ...Object.fromEntries(userInputNamesList.map((inputName) => [inputName, ``]))
   }
 );
+
+// Получает строковые данные name, value, id и коллбэк.
+//    Сам коллбэк - это любое событие onChange в input
+//    value - это имя и фамилия пользователя
+// Проверяем value на соотвествие re. Это должны быть только буквы и/или пробел
+// Если это так, тогда
+//    переводим первую букву каждого слова в верхний регистр
+//    и вызываем коллбэк
+export const inputValidation = (name, value, id, onChange) => {
+  const regexp = /^[a-zA-Zа-яёА-ЯЁ\s]*$/;
+  if(value.match(regexp)) {
+    value = value.replace(/(^|\s)\S/g, (str) => str.toUpperCase());
+    onChange(name, value, id);
+  }
+};
