@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {UserContext} from '../../context/user/userContext';
 import {Controls} from '../../components';
-import {createEntry} from '../../utils/functions';
+import {createEntry, isArraysEqual} from '../../utils/functions';
 import {MAX_ENTRIES, USER_ENTRIES} from '../../utils/constants';
 import {AlertContext} from '../../context/alert/alertContext';
 import {alertStyles} from '../../context/alert/alertStyles';
@@ -16,7 +16,7 @@ const Home = () => {
   const {user, update} = useContext(UserContext);
   const {changeAlert, hideAlert} = useContext(AlertContext);
   const [temporary, setTemporary] = useState([...user.user]);
-  const [isSaved, setSaved] = useState(false);
+  const [isSaved, setSaved] = useState(isArraysEqual(temporary, user.user));
 
   useEffect(() => {
     const foundEmptyEntry = temporary.find(({title, age}) => !title || !age);

@@ -1,10 +1,24 @@
-import React, {Fragment, useContext} from 'react';
+import React, {Fragment, useContext, useEffect} from 'react';
+import {AlertContext} from '../../context/alert/alertContext';
 import {UserContext} from '../../context/user/userContext';
+import {alertStyles} from '../../context/alert/alertStyles';
 import {USER_ENTRIES} from '../../utils/constants';
 
 const Preview = () => {
   const {user} = useContext(UserContext);
+  const {alert, hideAlert} = useContext(AlertContext);
   const data = [...user.user];
+
+  useEffect(() => {
+    if (alert.style === alertStyles.SUCCESS) {
+
+      let timerId = setTimeout(() => {
+        hideAlert();
+      }, 3000);
+
+      return () => clearTimeout(timerId);
+    }
+  }, []);
 
   const renderPersonalData = ({title, age}) => (
     <p>{title}, {age ? `${age} лет` : null}</p>

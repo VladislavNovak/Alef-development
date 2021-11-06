@@ -44,7 +44,10 @@
   border: solid 1px $border-gray;
   background: none;
 
+  transition: all 0.3s ease;
+
   &:focus {
     outline: 0;
+    background-color: $bg-top-bottom;
   }
 }
